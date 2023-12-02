@@ -21,9 +21,6 @@ export default function ExploreBooksComponent() {
                     </button>
                 </div>
             </div>
-            <CarouselComponent/>
-            <BookCategoryComponent/>
-            <RegisterNowComponent/>
         </div>
     );
 }

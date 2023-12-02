@@ -7,7 +7,7 @@ export default function RegisterNowComponent() {
                     <p className={"text-gray-400"}>Zarejestuj się i zacznij wypożyczać książki</p>
                     <button className={"bg-blue-500 text-white rounded-xl p-2 hover:bg-blue-400"}>Dołącz do nas</button>
                 </div>
-                <div className={"w-1/4"}>
+                <div className={"hidden md:block md:w-1/4"}>
                     <img  src={require("../images/register.png")}/>
                 </div>
             </div>
