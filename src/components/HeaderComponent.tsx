@@ -27,7 +27,7 @@ export default function HeaderComponent() {
                 </nav>
 
                 <div className="hidden md:flex space-x-4">
-                    <Link to="/login" className="bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100">Login</Link>
+                    <Link to="/login" className="hover:underline hover:bg-blue-200 no-underline bg-white text-blue-500  px-4 py-2 rounded-full">Login</Link>
                     <button className="bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100">Logout</button>
                 </div>
 
