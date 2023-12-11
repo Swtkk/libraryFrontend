@@ -1,29 +1,33 @@
 import { useEffect, useState } from 'react';
 import { BookModel } from '../model/BookModel';
-import {SearchBook} from "./SearchBook";
-import ApiClient from "../api/ApiClient";
-import LoadingComponent from "./LoadingComponent";
+import { SearchBook } from './SearchBook';
+import ApiClient from '../api/ApiClient';
+import LoadingComponent from './LoadingComponent';
 import Dropdown from 'react-bootstrap/Dropdown';
-export const SearchBooksPage = () => {
+import Pagination from 'react-bootstrap/Pagination';
 
+export default function SearchBooksPage () {
+    const itemsPerPage:number = 5;
+    const [currentPage, setCurrentPage] = useState(1);
     const [books, setBooks] = useState<BookModel[]>([]);
     const [httpError, setHttpError] = useState(null);
-    const [loading,setLoading] =useState(true)
+    const [loading, setLoading] = useState(true);
+
+    //Ladowanie i pobieranie danych z backendu
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-
-
-                const baseUrl: any = await ApiClient.get("/api/books")
-
+                const baseUrl: any = await ApiClient.get('/api/books');
                 const response = await fetch(baseUrl);
-
+                // lapanie bledu przy pobieraniu
                 if (!response.ok) {
                     console.error('Error:', response);
                     throw new Error('Something went wrong!');
                 }
-                const responseData = baseUrl.data
+
+                const responseData = baseUrl.data;
                 const loadedBooks: BookModel[] = [];
+                //wrzucanie do tablicy ksiazek i wykorzystanie useState zmiany stanu
                 for (const key in responseData) {
                     loadedBooks.push({
                         id: responseData[key].id,
@@ -34,79 +38,150 @@ export const SearchBooksPage = () => {
                         simpleThumb: responseData[key].simpleThumb,
                     });
                 }
+
                 setBooks(loadedBooks);
-            }
-            catch(error){
+            } catch (error) {
                 throw new Error('Something went wrong!');
-            }
-            finally {
-                setLoading(false)
+            } finally {
+
+                setLoading(false);
             }
         };
 
-
-
         fetchBooks().catch((error: any) => {
             setHttpError(error.message);
-        })
+        });
+        //powrot na poczatek po zmianie strony
         window.scrollTo(0, 0);
-    }, []);
-
-    if(loading){
-        return <div>
-            <LoadingComponent/>
-        </div>
-    }
+    }, [currentPage]);
 
     if (httpError) {
         return (
-            <div className='container m-5'>
+            <div className="container m-5">
                 <p>{httpError}</p>
             </div>
-        )
+        );
     }
-    return (
-        <div>
-            <div className='container'>
-                <div>
-                    <div className='row mt-5'>
-                        <div className='col-6'>
-                            <div className='d-flex'>
-                                <input className='form-control me-2' type='search'
-                                    placeholder='Search' aria-labelledby='Search'/>
-                                <button className='btn btn-outline-success'>
-                                    Search
-                                </button>
-                            </div>
-                        </div>
-                        <div className='col-4'>
-                            <Dropdown>
-                                <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
-                                    Category
-                                </Dropdown.Toggle>
+    if (loading) {
+        return <LoadingComponent />;
+    }
 
-                                <Dropdown.Menu>
-                                    <Dropdown.Item href='#'>All</Dropdown.Item>
-                                    <Dropdown.Item href='#'>Front End</Dropdown.Item>
-                                    <Dropdown.Item href='#'>Back End</Dropdown.Item>
-                                    <Dropdown.Item href='#'>Data</Dropdown.Item>
-                                    <Dropdown.Item href='#'>DevOps</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </div>
+
+    //ustawienia paginacji
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+    // funkcja do zwracania aktualnej strony z wynikami
+    const getCurrentPageItems = () => {
+        const indexOfLastBook = currentPage * itemsPerPage;
+        const indexOfFirstBook = indexOfLastBook - itemsPerPage;
+        return books.slice(indexOfFirstBook, indexOfLastBook);
+    };
+
+    const renderBooks = getCurrentPageItems().map((book) => (
+        <SearchBook book={book} key={book.id} />
+    ));
+
+    const totalPageCount = Math.ceil(books.length / itemsPerPage);
+
+    const fetchPageNumbers = () => {
+        const pageNeighbours = 2;
+        const totalNumbers = pageNeighbours * 2 + 3;
+        const totalBlocks = totalNumbers + 2;
+
+        if (totalPageCount > totalBlocks) {
+            let pages = [];
+            const startPage = Math.max(1, currentPage - pageNeighbours);
+            const endPage = Math.min(totalPageCount , currentPage + pageNeighbours);
+
+            for (let i = startPage; i <= endPage; i++) {
+                pages.push(i);
+            }
+
+            let paginationItems = [];
+
+            if (currentPage > pageNeighbours + 1) {
+                paginationItems.push(1);
+                if (currentPage > pageNeighbours + 2) {
+                    paginationItems.push('...');
+                }
+            }
+
+            paginationItems = paginationItems.concat(pages);
+
+            if (currentPage < totalPageCount - pageNeighbours) {
+                if (currentPage < totalPageCount - pageNeighbours - 1) {
+                    paginationItems.push('...');
+                }
+                paginationItems.push(totalPageCount);
+            }
+
+            return paginationItems;
+        }
+
+        return Array.from({ length: totalPageCount }, (_, i) => i + 1);
+    };
+
+    const pageNumbers = fetchPageNumbers();
+    const indexOfLastBook = currentPage * itemsPerPage;
+    const indexOfFirstBook = indexOfLastBook - itemsPerPage;
+    let lastItem = indexOfLastBook <= books.length ? (itemsPerPage * currentPage) : books.length;
+    return (
+        <div className="container">
+            <div className="row mt-5">
+                <div className="col-6">
+                    <div className="d-flex">
+                        <input
+                            className="form-control me-2"
+                            type="search"
+                            placeholder="Search"
+                            aria-labelledby="Search"
+                        />
+                        <button className="btn btn-outline-success">Search</button>
                     </div>
-                            <div className='mt-3'>
-                                <h5>Number of results: ({books.length})</h5>
-                            </div>
-                            <p>
-                                1 to 5 of 22 items:
-                            </p>
-                            {books.map(book => (
-                                <SearchBook book={book} key={book.id} />
-                            ))}
+                </div>
+                <div className="col-4">
+                    <Dropdown>
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                            Category
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item href="#">All</Dropdown.Item>
+                            <Dropdown.Item href="#">Front End</Dropdown.Item>
+                            <Dropdown.Item href="#">Back End</Dropdown.Item>
+                            <Dropdown.Item href="#">Data</Dropdown.Item>
+                            <Dropdown.Item href="#">DevOps</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
             </div>
 
+            <div className="mt-3">
+                <h5>Number of results: ({books.length})</h5>
+            </div>
+            <p>{indexOfFirstBook+1} to {lastItem} of {books.length} items:</p>
+
+            {renderBooks}
+
+            <div className="mt-3">
+                <Pagination className={"flex justify-center"}>
+                    {pageNumbers.map((number:any, index) => {
+                        if (number === '...') {
+                            return <Pagination.Ellipsis key={index} />;
+                        }
+
+                        return (
+                            <Pagination.Item
+                                key={index}
+                                active={number === currentPage}
+                                onClick={() => paginate(number)}
+                            >
+                                {number}
+                            </Pagination.Item>
+                        );
+                    })}
+                </Pagination>
+            </div>
         </div>
     );
-}
+};

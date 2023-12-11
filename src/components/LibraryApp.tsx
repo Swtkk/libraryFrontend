@@ -3,7 +3,7 @@ import {Route, Routes} from "react-router-dom";
 import LoginComponent from "./LoginComponent";
 import ErrorComponent from "./ErrorComponent";
 import HomePage from "./HomePage";
-import {SearchBooksPage} from "./SearchBooksPage";
+import SearchBooksPage from "./SearchBooksPage";
 export default function LibraryApp() {
     return (
         <div>
