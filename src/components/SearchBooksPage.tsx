@@ -11,12 +11,14 @@ export default function SearchBooksPage () {
     const [currentPage, setCurrentPage] = useState(1);
     const [books, setBooks] = useState<BookModel[]>([]);
     const [httpError, setHttpError] = useState(null);
-    const [loading, setLoading] = useState(true);
-
+    const [loading, setLoading] = useState(false);
+    const [loadingSearch, setLoadingSearch] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
     //Ladowanie i pobieranie danych z backendu
     useEffect(() => {
         const fetchBooks = async () => {
             try {
+                setLoading(true)
                 const baseUrl: any = await ApiClient.get('/api/books');
                 const response = await fetch(baseUrl);
                 // lapanie bledu przy pobieraniu
@@ -43,7 +45,6 @@ export default function SearchBooksPage () {
             } catch (error) {
                 throw new Error('Something went wrong!');
             } finally {
-
                 setLoading(false);
             }
         };
@@ -54,7 +55,37 @@ export default function SearchBooksPage () {
         //powrot na poczatek po zmianie strony
         window.scrollTo(0, 0);
     }, [currentPage]);
+    const handleSearch = async () => {
+        try {
+            setLoadingSearch(true)
+            const response = await ApiClient.get(`/api/books/search?title=${searchTerm}`);
 
+            if (!response) {
+                console.error('Error:', response);
+                throw new Error('Something went wrong!');
+            }
+
+            const responseData = response.data;
+            const searchedBooks: BookModel[] = [];
+
+            for (const key in responseData) {
+                searchedBooks.push({
+                    id: responseData[key].id,
+                    title: responseData[key].title,
+                    author: responseData[key].author,
+                    kind: responseData[key].kind,
+                    genre: responseData[key].genre,
+                    simpleThumb: responseData[key].simpleThumb,
+                });
+            }
+
+            setBooks(searchedBooks);
+        } catch (error) {
+            throw new Error('Something went wrong!');
+        }finally {
+            setLoadingSearch(false)
+        }
+    };
     if (httpError) {
         return (
             <div className="container m-5">
@@ -63,7 +94,7 @@ export default function SearchBooksPage () {
         );
     }
     if (loading) {
-        return <LoadingComponent />;
+        return <LoadingComponent/>;
     }
 
 
@@ -135,8 +166,10 @@ export default function SearchBooksPage () {
                             type="search"
                             placeholder="Search"
                             aria-labelledby="Search"
+                            value={searchTerm}
+                            onChange={(e)=>setSearchTerm((e.target.value))}
                         />
-                        <button className="btn btn-outline-success">Search</button>
+                        <button className="btn btn-outline-success" onClick={handleSearch}>Search</button>
                     </div>
                 </div>
                 <div className="col-4">
@@ -157,11 +190,11 @@ export default function SearchBooksPage () {
             </div>
 
             <div className="mt-3">
-                <h5>Number of results: ({books.length})</h5>
+                <h5>{loadingSearch ? '' : `Number of results: (${books.length})`}</h5>
             </div>
-            <p>{indexOfFirstBook+1} to {lastItem} of {books.length} items:</p>
+            <p>{loadingSearch ? '' : `${indexOfFirstBook+1} to ${lastItem} of ${books.length} items:`}</p>
 
-            {renderBooks}
+            {loadingSearch ? <div>Ładujemy Zawartość</div> : renderBooks}
 
             <div className="mt-3">
                 <Pagination className={"flex justify-center"}>
