@@ -54,7 +54,9 @@ export default function SearchBooksPage () {
         });
         //powrot na poczatek po zmianie strony
         window.scrollTo(0, 0);
-    }, [currentPage]);
+    }, []);
+
+
     const handleSearch = async () => {
         try {
             setLoadingSearch(true)
@@ -80,6 +82,7 @@ export default function SearchBooksPage () {
             }
 
             setBooks(searchedBooks);
+            setCurrentPage(1);
         } catch (error) {
             throw new Error('Something went wrong!');
         }finally {
@@ -148,7 +151,7 @@ export default function SearchBooksPage () {
 
             return paginationItems;
         }
-
+        window.scrollTo(0,0);
         return Array.from({ length: totalPageCount }, (_, i) => i + 1);
     };
 
@@ -208,8 +211,10 @@ export default function SearchBooksPage () {
                                 key={index}
                                 active={number === currentPage}
                                 onClick={() => paginate(number)}
+
                             >
                                 {number}
+
                             </Pagination.Item>
                         );
                     })}
