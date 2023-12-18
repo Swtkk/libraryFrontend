@@ -24,7 +24,7 @@ export default function SearchBooksPage () {
                 // lapanie bledu przy pobieraniu
                 if (!response.ok) {
                     console.error('Error:', response);
-                    throw new Error('Something went wrong!');
+                    new Error('Something went wrong!');
                 }
 
                 const responseData = baseUrl.data;
@@ -64,7 +64,7 @@ export default function SearchBooksPage () {
 
             if (!response) {
                 console.error('Error:', response);
-                throw new Error('Something went wrong!');
+                new Error('Something went wrong!');
             }
 
             const responseData = response.data;
