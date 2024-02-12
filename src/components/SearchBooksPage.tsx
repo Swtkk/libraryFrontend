@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
-import { BookModel } from '../model/BookModel';
-import { SearchBook } from './SearchBook';
+import {useEffect, useState} from 'react';
+import {BookModel} from '../model/BookModel';
+import {SearchBook} from './SearchBook';
 import ApiClient from '../api/ApiClient';
 import LoadingComponent from './LoadingComponent';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Pagination from 'react-bootstrap/Pagination';
+import BookCheckout from "./BookCheckoutPage/BookCheckout";
 
-export default function SearchBooksPage () {
-    const itemsPerPage:number = 5;
+export default function SearchBooksPage() {
+    const itemsPerPage: number = 5;
     const [currentPage, setCurrentPage] = useState(1);
     const [books, setBooks] = useState<BookModel[]>([]);
     const [httpError, setHttpError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [loadingSearch, setLoadingSearch] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
+    const [searchKind, setSearchKind] = useState('')
     //Ladowanie i pobieranie danych z backendu
     useEffect(() => {
         const fetchBooks = async () => {
@@ -85,10 +87,46 @@ export default function SearchBooksPage () {
             setCurrentPage(1);
         } catch (error) {
             throw new Error('Something went wrong!');
-        }finally {
+        } finally {
             setLoadingSearch(false)
         }
     };
+
+    const handleKind = async (kind: any) => {
+        try {
+            setSearchKind(kind)
+            setLoadingSearch(true)
+            const response = await ApiClient.get(`/api/books/kind?kind=${searchKind}`);
+
+            if (!response) {
+                console.error('Error:', response);
+                new Error('Something went wrong!');
+            }
+
+            const responseData = response.data;
+            const searchedKindBooks: BookModel[] = [];
+
+            for (const key in responseData) {
+                searchedKindBooks.push({
+                    id: responseData[key].id,
+                    title: responseData[key].title,
+                    author: responseData[key].author,
+                    kind: responseData[key].kind,
+                    genre: responseData[key].genre,
+                    simpleThumb: responseData[key].simpleThumb,
+                });
+            }
+
+            setBooks(searchedKindBooks);
+            setCurrentPage(1);
+        } catch (error) {
+            throw new Error('Something went wrong!');
+        } finally {
+            setLoadingSearch(false)
+        }
+    };
+
+
     if (httpError) {
         return (
             <div className="container m-5">
@@ -112,7 +150,7 @@ export default function SearchBooksPage () {
     };
 
     const renderBooks = getCurrentPageItems().map((book) => (
-        <SearchBook book={book} key={book.id} />
+        <SearchBook book={book} key={book.id}/>
     ));
 
     const totalPageCount = Math.ceil(books.length / itemsPerPage);
@@ -125,7 +163,7 @@ export default function SearchBooksPage () {
         if (totalPageCount > totalBlocks) {
             let pages = [];
             const startPage = Math.max(1, currentPage - pageNeighbours);
-            const endPage = Math.min(totalPageCount , currentPage + pageNeighbours);
+            const endPage = Math.min(totalPageCount, currentPage + pageNeighbours);
 
             for (let i = startPage; i <= endPage; i++) {
                 pages.push(i);
@@ -151,8 +189,8 @@ export default function SearchBooksPage () {
 
             return paginationItems;
         }
-        window.scrollTo(0,0);
-        return Array.from({ length: totalPageCount }, (_, i) => i + 1);
+        window.scrollTo(0, 0);
+        return Array.from({length: totalPageCount}, (_, i) => i + 1);
     };
 
     const pageNumbers = fetchPageNumbers();
@@ -170,7 +208,7 @@ export default function SearchBooksPage () {
                             placeholder="Search"
                             aria-labelledby="Search"
                             value={searchTerm}
-                            onChange={(e)=>setSearchTerm((e.target.value))}
+                            onChange={(e) => setSearchTerm((e.target.value))}
                         />
                         <button className="btn btn-outline-success" onClick={handleSearch}>Search</button>
                     </div>
@@ -182,11 +220,11 @@ export default function SearchBooksPage () {
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            <Dropdown.Item href="#">All</Dropdown.Item>
-                            <Dropdown.Item href="#">Front End</Dropdown.Item>
-                            <Dropdown.Item href="#">Back End</Dropdown.Item>
-                            <Dropdown.Item href="#">Data</Dropdown.Item>
-                            <Dropdown.Item href="#">DevOps</Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleKind('epoch')} href="#">Epoch</Dropdown.Item>
+                            <Dropdown.Item onClick={handleKind} href="#">Front End</Dropdown.Item>
+                            <Dropdown.Item onClick={handleKind} href="#">Back End</Dropdown.Item>
+                            <Dropdown.Item onClick={handleKind} href="#">Data</Dropdown.Item>
+                            <Dropdown.Item onClick={handleKind} href="#">DevOps</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
@@ -195,15 +233,15 @@ export default function SearchBooksPage () {
             <div className="mt-3">
                 <h5>{loadingSearch ? '' : `Number of results: (${books.length})`}</h5>
             </div>
-            <p>{loadingSearch ? '' : `${indexOfFirstBook+1} to ${lastItem} of ${books.length} items:`}</p>
+            <p>{loadingSearch ? '' : `${indexOfFirstBook + 1} to ${lastItem} of ${books.length} items:`}</p>
 
             {loadingSearch ? <div>Ładujemy Zawartość</div> : renderBooks}
 
             <div className="mt-3">
                 <Pagination className={"flex justify-center"}>
-                    {pageNumbers.map((number:any, index) => {
+                    {pageNumbers.map((number: any, index) => {
                         if (number === '...') {
-                            return <Pagination.Ellipsis key={index} />;
+                            return <Pagination.Ellipsis key={index}/>;
                         }
 
                         return (

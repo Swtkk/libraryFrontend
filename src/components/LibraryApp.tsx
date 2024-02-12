@@ -4,6 +4,7 @@ import LoginComponent from "./LoginComponent";
 import ErrorComponent from "./ErrorComponent";
 import HomePage from "./HomePage";
 import SearchBooksPage from "./SearchBooksPage";
+import BookCheckout from "./BookCheckoutPage/BookCheckout";
 export default function LibraryApp() {
     return (
         <div>
@@ -13,6 +14,7 @@ export default function LibraryApp() {
                 <Route path={"/login"} element={<LoginComponent/>} />
                 <Route path={"*"} element={<ErrorComponent/>}/>
                 <Route path={"/books"} element={<SearchBooksPage/>}/>
+                <Route path={"/checkout/:bookId"} element={<BookCheckout/>}/>
             </Routes>
 
         </div>
