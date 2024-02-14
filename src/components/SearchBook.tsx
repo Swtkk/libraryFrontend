@@ -64,7 +64,7 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
                         <button className="bg-lime-500 hover:bg-lime-700 text-white  py-2 px-4 rounded-full m-2 w-full">
                             <Link
                                 to={`/checkout/${props.book.id}`}
-                                state={{ bookTitle: props.book.title, bookAuthor: props.book.author }}
+                                state={{ bookTitle: props.book.title, bookAuthor: props.book.author, simpleThumb: props.book.simpleThumb }}
                                 className="no-underline hover:underline text-white text-center"
                             >Wyświetl opis</Link>
                         </button>
