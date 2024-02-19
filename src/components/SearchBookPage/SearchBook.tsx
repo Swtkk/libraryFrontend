@@ -1,4 +1,4 @@
-import {BookModel} from "../model/BookModel";
+import {BookModel} from "../../model/BookModel";
 import {Link} from "react-router-dom";
 
 export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
@@ -17,7 +17,7 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
                                  alt='Book'
                             />
                             :
-                            <img src={require('../images/biblioteka.jpg')}
+                            <img src={require('../../images/biblioteka.jpg')}
                                  width='123'
                                  height='196'
                                  alt='Book'
@@ -32,7 +32,7 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
                                  alt='Book'
                             />
                             :
-                            <img src={require('../images/biblioteka.jpg')}
+                            <img src={require('../../images/biblioteka.jpg')}
                                  width='123'
                                  height='196'
                                  alt='Book'

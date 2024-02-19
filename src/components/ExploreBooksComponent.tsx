@@ -1,7 +1,7 @@
 import biblioteka from '../images/biblioteka.jpg'
 import CarouselComponent from "./CarouselComponent";
 import {Route} from "react-router-dom";
-import BookCategoryComponent from "./BookCategoryComponent";
+import BookCategoryComponent from "./SearchBookPage/BookCategoryComponent";
 import RegisterNowComponent from "./RegisterNowComponent";
 export default function ExploreBooksComponent() {
     return (
