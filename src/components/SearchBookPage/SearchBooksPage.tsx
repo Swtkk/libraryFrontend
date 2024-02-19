@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {BookModel} from '../model/BookModel';
 import {SearchBook} from './SearchBook';
 import ApiClient from '../api/ApiClient';
-import LoadingComponent from './LoadingComponent';
+import LoadingComponent from './utils/LoadingComponent';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Pagination from 'react-bootstrap/Pagination';
 import BookCheckout from "./BookCheckoutPage/BookCheckout";
