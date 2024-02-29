@@ -5,6 +5,7 @@ import ErrorComponent from "./ErrorComponent";
 import HomePage from "./HomePage";
 import SearchBooksPage from "./SearchBookPage/SearchBooksPage";
 import BookCheckout from "./BookCheckoutPage/BookCheckout";
+import FooterComponent from "./FooterComponent";
 export default function LibraryApp() {
     return (
         <div>
@@ -16,7 +17,7 @@ export default function LibraryApp() {
                 <Route path={"/books"} element={<SearchBooksPage/>}/>
                 <Route path={"/checkout/:bookId"} element={<BookCheckout/>}/>
             </Routes>
-
+            <FooterComponent/>
         </div>
     );
 }

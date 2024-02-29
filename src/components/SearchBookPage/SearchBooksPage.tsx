@@ -29,7 +29,7 @@ export default function SearchBooksPage() {
                     new Error('Something went wrong!');
                 }
 
-                const responseData = baseUrl.data;
+                const responseData = baseUrl.data
                 const loadedBooks: BookModel[] = [];
                 //wrzucanie do tablicy ksiazek i wykorzystanie useState zmiany stanu
                 for (const key in responseData) {
