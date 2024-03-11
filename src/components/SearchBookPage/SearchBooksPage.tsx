@@ -5,9 +5,12 @@ import ApiClient from '../../api/ApiClient';
 import LoadingComponent from '../utils/LoadingComponent';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Pagination from 'react-bootstrap/Pagination';
-import BookCheckout from "../BookCheckoutPage/BookCheckout";
-
-export default function SearchBooksPage() {
+interface IsUserLogged {
+    isLogged: boolean | null;
+    userId: string | null;
+}
+export const SearchBooksPage:React.FC<IsUserLogged>= (props) => {
+    const {isLogged, userId} = props;
     const itemsPerPage: number = 5;
     const [currentPage, setCurrentPage] = useState(1);
     const [books, setBooks] = useState<BookModel[]>([]);
@@ -21,7 +24,7 @@ export default function SearchBooksPage() {
         const fetchBooks = async () => {
             try {
                 setLoading(true)
-                const baseUrl: any = await ApiClient.get('/api/books');
+                const baseUrl: any = await ApiClient.get('/api/public/books');
                 const response = await fetch(baseUrl);
                 // lapanie bledu przy pobieraniu
                 if (!response.ok) {
@@ -62,7 +65,7 @@ export default function SearchBooksPage() {
     const handleSearch = async () => {
         try {
             setLoadingSearch(true)
-            const response = await ApiClient.get(`/api/books/search?title=${searchTerm}`);
+            const response = await ApiClient.get(`/api/public/books/search?title=${searchTerm}`);
 
             if (!response) {
                 console.error('Error:', response);
@@ -96,7 +99,7 @@ export default function SearchBooksPage() {
         try {
             setSearchKind(kind)
             setLoadingSearch(true)
-            const response = await ApiClient.get(`/api/books/kind?kind=${searchKind}`);
+            const response = await ApiClient.get(`/api/public/books/kind?kind=${searchKind}`);
 
             if (!response) {
                 console.error('Error:', response);
@@ -150,7 +153,7 @@ export default function SearchBooksPage() {
     };
 
     const renderBooks = getCurrentPageItems().map((book) => (
-        <SearchBook book={book} key={book.id}/>
+        <SearchBook book={book} key={book.id} isLogged={isLogged}  userId={userId} />
     ));
 
     const totalPageCount = Math.ceil(books.length / itemsPerPage);
@@ -197,6 +200,7 @@ export default function SearchBooksPage() {
     const indexOfLastBook = currentPage * itemsPerPage;
     const indexOfFirstBook = indexOfLastBook - itemsPerPage;
     let lastItem = indexOfLastBook <= books.length ? (itemsPerPage * currentPage) : books.length;
+
     return (
         <div className="container">
             <div className="row mt-5">

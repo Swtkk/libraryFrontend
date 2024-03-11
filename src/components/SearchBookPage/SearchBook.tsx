@@ -1,10 +1,60 @@
 import {BookModel} from "../../model/BookModel";
 import {Link} from "react-router-dom";
-
-export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
+import ApiClient from "../../api/ApiClient";
+import {useEffect, useState} from "react";
+interface IsUserLogged {
+    book: BookModel,
+    isLogged: boolean | null;
+    userId: string | null
+}
+export const SearchBook: React.FC<IsUserLogged> = (props) => {
     const bookId = props.book.id
     const bookTitle = props.book.title
     const bookAuthor = props.book.author
+    const {book, isLogged,userId} = props
+
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    useEffect(() => {
+        // Sprawdzenie, czy książka jest w ulubionych (np. na podstawie danych z API)
+        // Tutaj możesz użyć odpowiedniego endpointu API do sprawdzenia statusu ulubionych dla konkretnej książki i zaktualizować stan isFavorite
+        // Przykładowa implementacja:
+        const checkIfFavorite = async () => {
+            try {
+                // Załóżmy, że endpoint '/api/user/favorites' zwraca listę ID ulubionych książek dla zalogowanego użytkownika
+                const response = await ApiClient.get(`/api/user/${userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        }
+                    });
+                console.log(response.data)
+
+            } catch (error) {
+                console.error("Błąd podczas sprawdzania ulubionych:", error);
+            }
+        };
+
+        checkIfFavorite();
+    }, [props.book.id]);
+
+    const handleToggleFavorite = async () => {
+        try {
+            if (isFavorite) {
+                // Usuwanie z ulubionych
+                await ApiClient.delete(`/api/user/remove-favorite/${props.book.id}`);
+            } else {
+                // Dodawanie do ulubionych
+                await ApiClient.post("/api/user/add-favorite", { bookId: props.book.id });
+            }
+
+            // Aktualizacja stanu isFavorite
+            setIsFavorite(!isFavorite);
+        } catch (error) {
+            console.error("Błąd podczas aktualizacji ulubionych:", error);
+        }
+    };
+
     return (
         <div className='card mt-3 shadow p-3 mb-3 bg-body rounded'>
             <div className='row g-0'>
@@ -17,7 +67,7 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
                                  alt='Book'
                             />
                             :
-                            <img src={require('../../images/biblioteka.jpg')}
+                            <img src={require('../../images/notFound.jpg')}
                                  width='123'
                                  height='196'
                                  alt='Book'
@@ -32,7 +82,7 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
                                  alt='Book'
                             />
                             :
-                            <img src={require('../../images/biblioteka.jpg')}
+                            <img src={require('../../images/notFound.jpg')}
                                  width='123'
                                  height='196'
                                  alt='Book'
@@ -68,17 +118,14 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
                                 className="no-underline hover:underline text-white text-center"
                             >Wyświetl opis</Link>
                         </button>
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded-full m-2 w-full">
-                            Chcę przeczytać
-                        </button>
-                        <button
-                            className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-full m-2 w-full">
-                            Przeczytałem
-                        </button>
-                        <button
-                            className="bg-yellow-500 hover:bg-yellow-700 text-white py-2 px-4 rounded-full m-2 w-full">
-                            Dodaj do ulubionych
-                        </button>
+                        {isLogged && <button
+                            className={`${
+                                isFavorite ? "hover:underline bg-red-500" : "bg-yellow-500"
+                            } hover:bg-yellow-700 text-white hover:underline py-2 px-4 rounded-full m-2 w-full`}
+                            onClick={handleToggleFavorite}
+                        >
+                            {isFavorite ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
+                        </button>}
                     </div>
                 </div>
 

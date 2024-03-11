@@ -10,7 +10,7 @@ export default function CarouselComponent() {
     useEffect(() => {
         const fetchBooks = async ()=>{
             try{
-                const baseUrl: any = await ApiClient.get('/api/books')
+                const baseUrl: any = await ApiClient.get('/api/public/books')
                 const response = baseUrl.data;
                 if(!response.ok){
                     new Error('Something went wrong!')
@@ -32,15 +32,15 @@ export default function CarouselComponent() {
                 <CCarouselItem className={"flex justify-center items-center text-center"}>
                     <div className={"flex w-full sm:w-1/2 mx-auto"}>
                         <div className="block w-2/3 sm:w-1/3 md:w-1/4 mx-auto">
-                            <CImage src={books.length > 0 ? books[0].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
+                            <CImage src={books.length > 0 ?  books[0].simpleThumb : require("../images/notFound.jpg")} alt="slide 1" />
                             <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[0].title : ''}"</h5>
                         </div>
                         <div className="hidden md:block  w-1/3 sm:w-1/4 mx-auto">
-                            <CImage src={books.length > 0 ? books[1].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
+                            <CImage src={books.length > 0 ? books[1].simpleThumb : require("../images/notFound.jpg")} alt="slide 1" />
                             <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[1].title : ''}"</h5>
                         </div>
                         <div className="hidden md:block  w-1/3 sm:w-1/4 mx-auto">
-                            <CImage src={books.length > 0 ? books[2].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
+                            <CImage src={books.length > 0 ? books[2].simpleThumb : require("../images/notFound.jpg")} alt="slide 1" />
                             <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[2].title : ''}"</h5>
                         </div>
                     </div>
@@ -70,16 +70,16 @@ export default function CarouselComponent() {
                 <CCarouselItem>
                     <div className={"flex w-full sm:w-1/2 mx-auto"}>
                         <div className="block w-2/3 sm:w-1/3 md:w-1/4 mx-auto">
-                            <CImage src={books.length > 0 ? books[6].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
-                            <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[6].title : ''}"</h5>
+                            <CImage src={books.length > 0 ? books[11].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
+                            <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[11].title : ''}"</h5>
                         </div>
                         <div className="hidden md:block  w-1/3 sm:w-1/4 mx-auto">
-                            <CImage src={books.length > 0 ? books[7].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
-                            <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[7].title : ''}"</h5>
+                            <CImage src={books.length > 0 ? books[13].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
+                            <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[13].title : ''}"</h5>
                         </div>
                         <div className="hidden md:block  w-1/3 sm:w-1/4 mx-auto">
-                            <CImage src={books.length > 0 ? books[8].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
-                            <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[8].title : ''}"</h5>
+                            <CImage src={books.length > 0 ? books[14].simpleThumb : require("../images/zdj2.jpg")} alt="slide 1" />
+                            <h5 className={"mt-5 text-base"}>"{books.length > 0 ? books[14].title : ''}"</h5>
                         </div>
                     </div>
                     <div className={"mt-16"} data-coreui-target="#carouselExampleControls" data-coreui-slide="prev">
