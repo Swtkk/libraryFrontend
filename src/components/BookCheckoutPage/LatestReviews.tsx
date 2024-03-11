@@ -6,6 +6,7 @@ export const LatestReviews: React.FC<{
     reviews: ReviewModel[],
     bookId: number | string | undefined,
 }> = (props) => {
+
     return (
         <div className="flex flex-col sm:flex-row mt-5">
             <div className="flex-shrink-0 mb-4 sm:mb-0 sm:w-1/4">

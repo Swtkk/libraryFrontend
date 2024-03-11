@@ -7,8 +7,11 @@ import {ReviewModel} from "../../model/ReviewModel";
 import ApiClient from "../../api/ApiClient";
 import LoadingComponent from "../utils/LoadingComponent";
 import {LatestReviews} from "./LatestReviews";
+interface BookCheckoutAndReviewProps {
+    isLogged: boolean | null;
 
-export default function BookCheckout() {
+}
+export const  BookCheckout:React.FC<BookCheckoutAndReviewProps> =({isLogged})=> {
     const location = useLocation();
     const {bookTitle, bookAuthor, simpleThumb, book} = location.state as {
         bookTitle: string;
@@ -22,7 +25,7 @@ export default function BookCheckout() {
 
     useEffect(() => {
         const fetchBookReviews = async () => {
-            const reviewUrl: any = await ApiClient.get(`api/reviews/${book.id}`)
+            const reviewUrl: any = await ApiClient.get(`api/public/reviews/${book.id}`)
 
             const responseReviews = await fetch(reviewUrl)
             if (!responseReviews.ok) {
@@ -73,7 +76,7 @@ export default function BookCheckout() {
                         lorem ipsum
                     </p>
                 </div>
-                <BookCheckoutAndReview book={book}/>
+                <BookCheckoutAndReview book={book} isLoggedIn={isLogged}/>
             </div>
             <LatestReviews reviews={reviews} bookId={book.id}/>
         </div>
