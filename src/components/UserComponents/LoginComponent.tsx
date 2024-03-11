@@ -1,38 +1,56 @@
-import React, {ChangeEvent, useState} from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function LoginComponent() {
+interface LoginComponentProps {
+    setUserRole: (role: string) => void;
+}
+
+const LoginComponent: React.FC<LoginComponentProps> = ({ setUserRole }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState(false);
     const navigate = useNavigate();
 
-    function UsernameChange(event: ChangeEvent<HTMLInputElement>) {
+    const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
-    }
+    };
 
-    function PasswordChange(event: ChangeEvent<HTMLInputElement> ) {
+    const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
-    }
+    };
 
-    function handleSubmit() {
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post("http://localhost:8080/api/login", {
+                email: username,
+                password: password,
+            });
 
-        if(username ==='marcin' && password ==='123'){
-            setErrorMessage(false)
-            navigate(`/welcome/${username}`);
-        }else{
-            setErrorMessage(true)
+            if (response.status === 200 && response.data.token !== undefined) {
+                const res = await axios.get(`http://localhost:8080/api/public/${username}`);
+                const token = response.data.token;
+                localStorage.setItem("token", token);
+                console.log(res.data.roles);
+                const userRole = res.data.roles;
+                setUserRole(userRole);
+                navigate(`/`);
+            } else {
+                setErrorMessage(true);
+            }
+        } catch (error) {
+            console.error("Wystąpił błąd:", error);
         }
-    }
+    };
 
     return (
         <div className="mt-16 flex flex-col items-center">
-            {errorMessage && <div className={"errorMessage"}>Logowanie nieudane sprawdź swoje dane</div>}
+            {errorMessage && <div className={"errorMessage"}>Logowanie nieudane, sprawdź swoje dane</div>}
             <h1 className="text-3xl p-3">Zaloguj się</h1>
             <h2 className="mt-2">Przejdź do biblioteki</h2>
             <div className="mt-4">
                 <div className="mb-4">
-                    <label htmlFor="username" className=" block text-sm font-medium text-gray-400">
+                    <label htmlFor="username" className="block text-sm font-medium text-gray-400">
                         Nazwa użytkownika:
                     </label>
                     <input
@@ -40,7 +58,7 @@ export default function LoginComponent() {
                         type="text"
                         name="username"
                         value={username}
-                        onChange={UsernameChange}
+                        onChange={handleUsernameChange}
                         className="text-black mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full"
                     />
                 </div>
@@ -53,7 +71,7 @@ export default function LoginComponent() {
                         type="password"
                         name="password"
                         value={password}
-                        onChange={PasswordChange}
+                        onChange={handlePasswordChange}
                         className="text-black mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full"
                     />
                 </div>
@@ -62,7 +80,6 @@ export default function LoginComponent() {
                         className="bg-blue-500 text-white px-8 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
                         onClick={handleSubmit}
                         type="button"
-
                     >
                         Login
                     </button>
@@ -70,4 +87,6 @@ export default function LoginComponent() {
             </div>
         </div>
     );
-}
+};
+
+export default LoginComponent;
