@@ -18,10 +18,11 @@ const RegistrationForm = () => {
             });
             console.log('User registered successfully:', response.data);
             setSuccesMessage("Uzytkownik zarejestrowany pomyślnie")
+            setErrorMessage("")
             // Dodaj odpowiednie zachowanie po zarejestrowaniu użytkownika, np. przekierowanie na inną stronę
         } catch (error) {
             console.error('Error during registration:', error);
-            setErrorMessage('Registration failed. Please try again.');
+            setErrorMessage('Nie udało się zarejestrowac uzytkownika');
         }
     };
 

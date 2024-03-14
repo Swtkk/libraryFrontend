@@ -1,7 +1,6 @@
 export interface ReviewModel {
     id: string;
-    userEmail: string;
+    userName: string;
     date: string;
     body: string;
-    bookId: string;
 }

@@ -6,9 +6,10 @@ interface LoginComponentProps {
     setUserRole: (role: string) => void;
     setIsLogged: (isLogged: boolean) => void;
     setUserId:(userId: string)=>void;
+    setName:(userName: string)=>void;
 }
 
-const LoginComponent: React.FC<LoginComponentProps> = ({ setUserRole,setIsLogged,setUserId }) => {
+const LoginComponent: React.FC<LoginComponentProps> = ({ setUserRole,setIsLogged,setUserId,setName }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState(false);
@@ -36,10 +37,10 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ setUserRole,setIsLogged
                 const res = await axios.get(`http://localhost:8080/api/public/${username}`);
                 const token = response.data.token;
                 localStorage.setItem("token", token);
-                console.log(res.data.roles);
-                console.log(res.data.id)
+                console.log(res.data.email)
                 const userRole = res.data.roles;
                 setUserRole(userRole);
+                setName(res.data.email)
                 setIsLogged(true);
                 setUserId(res.data.id);
                 navigate(`/`);
@@ -85,7 +86,7 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ setUserRole,setIsLogged
                 </div>
                 <div>
                     <button
-                        className="hover:underline bg-blue-500 text-white px-8 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+                        className="hover:underline bg-blue-500 text-white px-8 py-2 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
                         onClick={handleSubmit}
                         type="button"
                     >

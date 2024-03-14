@@ -16,8 +16,8 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ userRole, handleLogou
     return (
         <header className="bg-blue-500 py-2 text-white w-full">
             <div className="container  flex justify-between items-center">
-                <Link to={"/"}>
-                    <div className="flex items-end">
+                <Link to={"/"} >
+                    <div className="flex items-end ">
                         <img
                             src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/25d45014-8cc3-4c98-b02c-5a0cf3a55ddd/dd5cxfx-d2ab96af-5834-4111-b278-8dfad917aadc.png/v1/fill/w_900,h_723/fire_book_on_a_transparent_background_by_prussiaart_dd5cxfx-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIzIiwicGF0aCI6IlwvZlwvMjVkNDUwMTQtOGNjMy00Yzk4LWIwMmMtNWEwY2YzYTU1ZGRkXC9kZDVjeGZ4LWQyYWI5NmFmLTU4MzQtNDExMS1iMjc4LThkZmFkOTE3YWFkYy5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.CIS7V6Ly_Qzttp7wVHQMioHLGP8k0HQFvGst1ZGlvYg"
                             alt="Biblioteka"
@@ -52,13 +52,13 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ userRole, handleLogou
                 </div>
 
                 {/* Desktop navigation */}
-                <nav className="hidden md:flex flex-1 justify-around items-center space-x-4">
-                    <div className={"flex gap-5"}>
+                <nav className="hidden md:flex flex-1 justify-evenly items-center space-x-2 ml-2">
+                    <div className={"flex gap-3 lg:gap-5"}>
                         <Link to="/books" className="no-underline hover:underline text-white
                         p-2 bg-gray-500/20 border rounded">
                             Lista książek
                         </Link>
-                        {userRole === "USER" && <Link to="/favorites" className="
+                        {(userRole === "USER" || userRole === "ADMIN")  && <Link to="/favorites" className="
                         no-underline hover:underline text-white
                         p-2 bg-gray-500/20 border rounded">
                             Moje ulubione
@@ -80,7 +80,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ userRole, handleLogou
                     <div>
                         {userRole ? (
                             <button
-                                className="hover:underline bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100"
+                                className=" hover:underline bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-blue-100"
                                 onClick={handleLogout}
                             >
                                 Wyloguj
@@ -88,7 +88,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ userRole, handleLogou
                         ) : (
                             <Link
                                 to="/login"
-                                className="hover:underline hover:bg-blue-200 no-underline bg-white text-blue-500  px-4 py-2 rounded-full"
+                                className=" hover:underline hover:bg-blue-200 no-underline bg-white text-blue-500  px-4 py-2 rounded-full"
                             >
                                 Zaloguj
                             </Link>
@@ -109,7 +109,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ userRole, handleLogou
                     >
                         Lista książek
                     </Link>
-                    {userRole ==="USER" &&(<Link
+                    {(userRole ==="USER" || userRole=== "ADMIN") &&(<Link
                         to="/favorites"
                         className="block p-2 text-white hover:bg-blue-400 rounded-md"
                         onClick={toggleMobileMenu}
