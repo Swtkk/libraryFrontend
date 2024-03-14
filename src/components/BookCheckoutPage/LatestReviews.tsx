@@ -1,12 +1,11 @@
-import {ReviewModel} from "../../model/ReviewModel";
-import {Link} from "react-router-dom";
-import {Review} from "../utils/Review";
+import { ReviewModel } from "../../model/ReviewModel";
+import { Link } from "react-router-dom";
 
 export const LatestReviews: React.FC<{
     reviews: ReviewModel[],
     bookId: number | string | undefined,
 }> = (props) => {
-
+    console.log(props.reviews)
     return (
         <div className="flex flex-col sm:flex-row mt-5">
             <div className="flex-shrink-0 mb-4 sm:mb-0 sm:w-1/4">
@@ -15,8 +14,21 @@ export const LatestReviews: React.FC<{
             <div className="flex-grow text-left">
                 {props.reviews.length > 0 ?
                     <>
-                        {props.reviews.slice(0, 3).map(eachReview => (
-                            <Review review={eachReview} key={eachReview.id}/>
+                        {props.reviews.map((eachReview, index) => (
+                            <div className={"col-sm-8 col-md-8"}>
+                                <h5>{eachReview.userName ? `${eachReview.userName}` : "Unknow"}</h5>
+                                <div className={"row"}>
+                                    <div className={"col"}>
+                                        {eachReview.date}
+                                    </div>
+                                </div>
+                                <div className={"mt-2"}>
+                                    <p>
+                                        {eachReview.body}
+                                    </p>
+                                </div>
+                            <hr/>
+                            </div>
                         ))}
 
                         <div className="mt-3 text-center sm:text-left">
