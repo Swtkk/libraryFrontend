@@ -59,31 +59,29 @@ export default function SearchBooksPage() {
     }, []);
 
     const handleDeleteBook = async (bookId: string) => {
-        try {
-            setLoadingSearch(true);
-            const response = await ApiClient.delete(`/api/admin/books/${bookId}`,
 
-                {
+            try {
+                setLoadingSearch(true);
+                const response = await ApiClient.delete(`/api/admin/books/${bookId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
+                });
+
+                if (!response) {
+                    console.error('Error:', response);
+                    throw new Error('Something went wrong!');
                 }
 
-            );
-
-            if (!response) {
-                console.error('Error:', response);
-                throw new Error('Something went wrong!');
+                // Aktualizacja listy książek po usunięciu
+                const updatedBooks = books.filter((book) => book.id !== bookId);
+                setBooks(updatedBooks);
+            } catch (error) {
+                console.error('Something went wrong:', error);
+            } finally {
+                setLoadingSearch(false);
             }
 
-            // Aktualizacja listy książek po usunięciu
-            const updatedBooks = books.filter((book) => book.id !== bookId);
-            setBooks(updatedBooks);
-        } catch (error) {
-            console.error('Something went wrong:', error);
-        } finally {
-            setLoadingSearch(false);
-        }
     };
     const handleSearch = async () => {
         try {

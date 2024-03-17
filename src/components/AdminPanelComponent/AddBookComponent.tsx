@@ -17,8 +17,7 @@ const AddBook = () => {
     useEffect(() => {
         const fetchGenres = async () => {
             try {
-                const response = await ApiClient.get("/api/public/books"); // Zastąp to odpowiednim endpointem API
-                // setGenres(response.data.)
+                const response = await ApiClient.get("/api/public/books");
                 const genreArr = response.data.map((book:any) => book.genre);
                 // @ts-ignore
                 const uniqueGenres = [...new Set(genreArr)];

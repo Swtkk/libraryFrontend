@@ -40,7 +40,7 @@ const LibraryApp: React.FC = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginComponent setUserRole={setUserRole} setIsLogged={setIsLogged} setUserId={setUserId} setName={setName} />} />
                 <Route path="/books" element={<SearchBooksPage isLogged={isLogged} userId={userId} />}  />
-                <Route path="/checkout/:bookId" element={<BookCheckout isLogged={isLogged} name={name}  />} />
+                <Route path="/checkout/:bookId" element={<BookCheckout isLogged={isLogged} name={name} userRole={userRole}  />} />
                 <Route path={"/error"} element={<ErrorComponent/>}/>
                 <Route path={"/register"} element={<RegistryComponent/>}/>
                 <Route

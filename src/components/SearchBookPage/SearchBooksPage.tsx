@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BookModel} from '../../model/BookModel';
 import {SearchBook} from './SearchBook';
 import ApiClient from '../../api/ApiClient';
@@ -18,7 +18,23 @@ export const SearchBooksPage:React.FC<IsUserLogged>= (props) => {
     const [loading, setLoading] = useState(false);
     const [loadingSearch, setLoadingSearch] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
-    const [searchKind, setSearchKind] = useState('')
+    // const [searchKind, setSearchKind] = useState('')
+    // const [kind, setKind] = useState<string[]>([]);
+    // useEffect(() => {
+    //     const fetchKind = async () => {
+    //         try {
+    //             const response = await ApiClient.get("/api/public/books");
+    //             const kindArr = response.data.map((book:any) => book.kind);
+    //             // @ts-ignore
+    //             const uniqueKind = [...new Set(kindArr)];
+    //             setKind(uniqueKind);
+    //         } catch (error) {
+    //             console.error("Wystąpił błąd podczas pobierania gatunków:", error);
+    //         }
+    //     };
+    //
+    //     fetchKind();
+    // }, []);
     //Ladowanie i pobieranie danych z backendu
     useEffect(() => {
         const fetchBooks = async () => {
@@ -95,39 +111,39 @@ export const SearchBooksPage:React.FC<IsUserLogged>= (props) => {
         }
     };
 
-    const handleKind = async (kind: any) => {
-        try {
-            setSearchKind(kind)
-            setLoadingSearch(true)
-            const response = await ApiClient.get(`/api/public/books/kind?kind=${searchKind}`);
-
-            if (!response) {
-                console.error('Error:', response);
-                new Error('Something went wrong!');
-            }
-
-            const responseData = response.data;
-            const searchedKindBooks: BookModel[] = [];
-
-            for (const key in responseData) {
-                searchedKindBooks.push({
-                    id: responseData[key].id,
-                    title: responseData[key].title,
-                    author: responseData[key].author,
-                    kind: responseData[key].kind,
-                    genre: responseData[key].genre,
-                    simpleThumb: responseData[key].simpleThumb,
-                });
-            }
-
-            setBooks(searchedKindBooks);
-            setCurrentPage(1);
-        } catch (error) {
-            throw new Error('Something went wrong!');
-        } finally {
-            setLoadingSearch(false)
-        }
-    };
+    // const handleKind = async (kind: any) => {
+    //     try {
+    //         setSearchKind(kind)
+    //         setLoadingSearch(true)
+    //         const response = await ApiClient.get(`/api/public/books/kind?kind=${searchKind}`);
+    //         console.log(response.data)
+    //         if (!response) {
+    //             console.error('Error:', response);
+    //             new Error('Something went wrong!');
+    //         }
+    //
+    //         const responseData = response.data;
+    //         const searchedKindBooks: BookModel[] = [];
+    //
+    //         for (const key in responseData) {
+    //             searchedKindBooks.push({
+    //                 id: responseData[key].id,
+    //                 title: responseData[key].title,
+    //                 author: responseData[key].author,
+    //                 kind: responseData[key].kind,
+    //                 genre: responseData[key].genre,
+    //                 simpleThumb: responseData[key].simpleThumb,
+    //             });
+    //         }
+    //
+    //         setBooks(searchedKindBooks);
+    //         setCurrentPage(1);
+    //     } catch (error) {
+    //         throw new Error('Something went wrong!');
+    //     } finally {
+    //         setLoadingSearch(false)
+    //     }
+    // };
 
 
     if (httpError) {
@@ -217,21 +233,21 @@ export const SearchBooksPage:React.FC<IsUserLogged>= (props) => {
                         <button className="btn btn-outline-success" onClick={handleSearch}>Search</button>
                     </div>
                 </div>
-                <div className="col-4">
-                    <Dropdown>
-                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                            Category
-                        </Dropdown.Toggle>
+                {/*<div className="col-4">*/}
+                {/*    <Dropdown>*/}
+                {/*        <Dropdown.Toggle variant="secondary" id="dropdown-basic">*/}
+                {/*            Category*/}
+                {/*        </Dropdown.Toggle>*/}
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => handleKind('epoch')} href="#">Epoch</Dropdown.Item>
-                            <Dropdown.Item onClick={handleKind} href="#">Front End</Dropdown.Item>
-                            <Dropdown.Item onClick={handleKind} href="#">Back End</Dropdown.Item>
-                            <Dropdown.Item onClick={handleKind} href="#">Data</Dropdown.Item>
-                            <Dropdown.Item onClick={handleKind} href="#">DevOps</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </div>
+                {/*        <Dropdown.Menu>*/}
+                {/*            {kind && kind.map((kind) => (*/}
+                {/*                <div>*/}
+                {/*                <Dropdown.Item onClick={() => handleKind(`${kind}`)}>{kind}</Dropdown.Item>*/}
+                {/*                </div>*/}
+                {/*            ))}*/}
+                {/*        </Dropdown.Menu>*/}
+                {/*    </Dropdown>*/}
+                {/*</div>*/}
             </div>
 
             <div className="mt-3">

@@ -1,11 +1,26 @@
 import { ReviewModel } from "../../model/ReviewModel";
 import { Link } from "react-router-dom";
+import ApiClient from "../../api/ApiClient";
 
 export const LatestReviews: React.FC<{
     reviews: ReviewModel[],
     bookId: number | string | undefined,
+    userRole: string | null,
+    onDeleteReview: (reviewId: string) => void;
+
 }> = (props) => {
-    console.log(props.reviews)
+    const deleteReview = async (reviewId: string) => {
+        const confirmDelete = window.confirm('Czy na pewno chcesz usunąć komentarz?');
+        if (confirmDelete) {
+            try {
+                await props.onDeleteReview(reviewId);
+            } catch (error) {
+                console.error("Error while deleting review:", error);
+            }
+        }
+    };
+
+
     return (
         <div className="flex flex-col sm:flex-row mt-5">
             <div className="flex-shrink-0 mb-4 sm:mb-0 sm:w-1/4">
@@ -15,11 +30,13 @@ export const LatestReviews: React.FC<{
                 {props.reviews.length > 0 ?
                     <>
                         {props.reviews.map((eachReview, index) => (
-                            <div className={"col-sm-8 col-md-8"}>
+                            <div className={"flex items-center justify-between border-b-2 "}>
+                                <div className={"col-sm-8 col-md-8"}>
                                 <h5>{eachReview.userName ? `${eachReview.userName}` : "Unknow"}</h5>
                                 <div className={"row"}>
                                     <div className={"col"}>
                                         {eachReview.date}
+
                                     </div>
                                 </div>
                                 <div className={"mt-2"}>
@@ -27,6 +44,10 @@ export const LatestReviews: React.FC<{
                                         {eachReview.body}
                                     </p>
                                 </div>
+                                </div>
+                                {props.userRole === "ADMIN" && <div className={"items-end"}>
+                                    <button onClick={() => deleteReview(eachReview.id)} className={"hover:underline bg-red-500 text-white px-4 py-2 rounded-xl "}>Usuń komentarz</button>
+                                </div>}
                             <hr/>
                             </div>
                         ))}

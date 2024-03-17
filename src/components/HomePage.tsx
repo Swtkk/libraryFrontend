@@ -9,7 +9,7 @@ export default function HomePage() {
         <div>
             <ExploreBooksComponent/>
             <CarouselComponent/>
-            <BookCategoryComponent/>
+            {/*<BookCategoryComponent/>*/}
             <RegisterNowComponent/>
         </div>
     );

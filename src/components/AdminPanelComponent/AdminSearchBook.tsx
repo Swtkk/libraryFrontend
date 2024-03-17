@@ -14,6 +14,7 @@ export const AdminSearchBook: React.FC<AdminSearchBookProps> = (props) => {
             props.onDelete(props.book.id);
         }
     };
+
     return (
         <div className='card mt-3 shadow p-3 mb-3 bg-body rounded'>
             <div className='row g-0'>
@@ -86,7 +87,7 @@ export const AdminSearchBook: React.FC<AdminSearchBookProps> = (props) => {
                         </button>
                         <button
                             onClick={handleDelete}
-                            className="bg-red-500 hover:bg-red-400 text-white py-2 px-4 rounded-full m-2 w-full"
+                            className="hover:underline bg-red-500 hover:bg-red-400 text-white py-2 px-4 rounded-full m-2 w-full"
                         >
                             Usuń książkę
                         </button>

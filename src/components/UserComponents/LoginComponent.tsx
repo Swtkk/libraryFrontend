@@ -12,7 +12,7 @@ interface LoginComponentProps {
 const LoginComponent: React.FC<LoginComponentProps> = ({ setUserRole,setIsLogged,setUserId,setName }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     window.addEventListener('message', function(event) {
         event.preventDefault(); // lub event.stopPropagation();
@@ -42,21 +42,23 @@ const LoginComponent: React.FC<LoginComponentProps> = ({ setUserRole,setIsLogged
                 setUserRole(userRole);
                 setName(res.data.email)
                 setIsLogged(true);
+                setErrorMessage("")
                 setUserId(res.data.id);
                 navigate(`/`);
             } else {
-                setErrorMessage(true);
+                setErrorMessage("Nie udało się zalogować");
             }
         } catch (error) {
             console.error("Wystąpił błąd:", error);
+            setErrorMessage("Nie udało się zalogować")
         }
     };
 
     return (
         <div className="mt-16 flex flex-col items-center">
-            {errorMessage && <div className={"errorMessage"}>Logowanie nieudane, sprawdź swoje dane</div>}
             <h1 className="text-3xl p-3">Zaloguj się</h1>
             <h2 className="mt-2">Przejdź do biblioteki</h2>
+            <div className={"text-red-500 font-bold errorMessage"}>{errorMessage}</div>
             <div className="mt-4">
                 <div className="mb-4">
                     <label htmlFor="username" className="block text-sm font-medium text-gray-400">

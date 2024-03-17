@@ -52,7 +52,7 @@ export const FavoritesBooksComponent: React.FC<FavoritesBooksComponentProps> = (
         }
     };
     return (
-        <div className="container mx-auto">
+        <div className="container mx-auto mt-3">
             <h1 className="text-3xl font-semibold mb-4">Ulubione Książki</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {favoriteBooks.map((book) => (
