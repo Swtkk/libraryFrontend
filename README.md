@@ -1,3 +1,3 @@
 Library APP  
 
-Frontend - React tsx  
+Frontend - React tsx + Tailwind CSS
